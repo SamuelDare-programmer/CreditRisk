@@ -16,7 +16,10 @@ backend/app/
 │   ├── schemas.py      # Pydantic request/response schemas
 │   ├── services.py     # Business logic
 │   └── dependencies.py # Feature-specific dependencies (optional)
+├── Exceptions.py
+├── Middleware.py
 └── main.py             # App entry point
+|
 ```
 
 ### Centralized Core

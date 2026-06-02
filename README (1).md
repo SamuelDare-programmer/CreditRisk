@@ -39,7 +39,7 @@ credit-risk-docs/
 | **Project Name** | Credit Risk Scoring System                                     |
 | **Type**         | Final Year Computer Science Project                            |
 | **University**   | University of Benin                                            |
-| **Developer**    | [Your Name]                                                    |
+| **Developer**    | Samuel Madehin                                                 |
 | **Stage**        | 🟡 Pre-development — design & setup phase                      |
 | **Target AUC**   | ≥ 85% on held-out test data                                    |
 | **Core Stack**   | Python · FastAPI · LightGBM · SHAP · PostgreSQL · AWS · Docker |

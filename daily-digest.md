@@ -162,3 +162,14 @@ Restructured the API architecture to a feature-based organization as requested, 
 
 **Next Session:** Create GitHub repository and download Kaggle datasets
 ---
+
+## $(date '+%Y-%m-%d') - Kaggle Integration
+- **Added Kaggle dependency:** Installed `kaggle` package and added to `requirements.txt`.
+- **Configured Pydantic Settings:** Updated `app/core/config.py` to securely load `KAGGLE_USERNAME` and `KAGGLE_KEY`.
+- **Environment Templates:** Added `KAGGLE_USERNAME` and `KAGGLE_KEY` placeholders to `.env.example`.
+- **Data Directories:** Created `data/raw/` and `data/processed/` with `.gitignore` configurations.
+- **Download Script:** Created `scripts/download_data.py` to fetch and extract the Home Credit Default Risk dataset securely injecting credentials.
+
+## $(date '+%Y-%m-%d') - IDE Setup
+- **VS Code Configuration:** Created workspace settings to automatically format code with Black, sort imports with isort, and lint with Flake8 on save.
+- **Extensions:** Added recommended VS Code extensions for Python, Jupyter, and PostgreSQL.

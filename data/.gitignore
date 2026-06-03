@@ -1,0 +1,11 @@
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore
+# Except raw and processed directories (but ignore their contents)
+!raw/
+!processed/
+raw/*
+processed/*
+!raw/.gitkeep
+!processed/.gitkeep

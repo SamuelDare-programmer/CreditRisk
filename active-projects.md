@@ -33,7 +33,7 @@ Phase 5: Docs & Presentation [🔴··········] 0%
 - [x] Install base dependencies and generate `requirements.txt`
 - [x] Set up `.env` file with placeholder secrets
 - [x] Download datasets from Kaggle (Home Credit Default Risk + Lending Club)
-- [ ] Configure VS Code / Antigravity IDE with Python linting (flake8 / pylint)
+- [x] Configure VS Code / Antigravity IDE with Python linting (flake8 / pylint)
 - [x] Create initial `docker-compose.yml` with PostgreSQL + Redis services
 
 ### Next Action

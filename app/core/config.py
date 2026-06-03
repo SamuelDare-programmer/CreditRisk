@@ -5,7 +5,6 @@ This module defines application settings using Pydantic BaseSettings
 for environment variable management and validation.
 """
 
-import os
 from typing import Optional
 
 from pydantic_settings import BaseSettings
@@ -23,6 +22,8 @@ class Settings(BaseSettings):
         SECRET_KEY: Secret key for JWT or other security.
         DATABASE_URL: URL for the database connection.
         DEBUG: Debug mode flag.
+        KAGGLE_USERNAME: Kaggle API username.
+        KAGGLE_KEY: Kaggle API key.
     """
 
     PROJECT_NAME: str = "Credit Risk Scoring System"
@@ -33,8 +34,13 @@ class Settings(BaseSettings):
     DATABASE_URL: Optional[str] = None
     DEBUG: bool = True
 
+    # Kaggle Integration
+    KAGGLE_USERNAME: Optional[str] = None
+    KAGGLE_KEY: Optional[str] = None
+
     class Config:
         """Pydantic configuration."""
+
         env_file = ".env"
 
 

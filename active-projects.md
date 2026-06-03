@@ -32,12 +32,12 @@ Phase 5: Docs & Presentation [🔴··········] 0%
 - [x] Create and activate Python virtual environment (`venv` or `conda`)
 - [x] Install base dependencies and generate `requirements.txt`
 - [x] Set up `.env` file with placeholder secrets
-- [ ] Download datasets from Kaggle (Home Credit Default Risk + Lending Club)
+- [x] Download datasets from Kaggle (Home Credit Default Risk + Lending Club)
 - [ ] Configure VS Code / Antigravity IDE with Python linting (flake8 / pylint)
 - [x] Create initial `docker-compose.yml` with PostgreSQL + Redis services
 
 ### Next Action
-> 🎯 **Create the GitHub repository (`credit-risk-api`) and download the datasets from Kaggle.**
+> 🎯 **Create the GitHub repository (`credit-risk-api`) and complete any remaining Phase 0 setup.**
 
 ### Blockers
 > None currently.

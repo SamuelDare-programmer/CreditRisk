@@ -33,6 +33,175 @@ graph TD
 ```
 *(Note: Diagram rendered via Mermaid. If not visible, see `docs/architecture.png`)*
 
+
+## 📐 System UML Diagrams
+
+The following diagrams illustrate the architecture, behaviour, and structure of the final proposed system.
+
+### 1. Use Case Diagram
+Describes the interactions between the primary actor (the Lender) and the core capabilities of the system.
+
+```mermaid
+flowchart LR
+    %% Actors
+    Lender["Lender (API Consumer)"]
+    Admin["System Admin"]
+
+    %% System Boundary
+    subgraph "Credit Risk Scoring System"
+        UC1(["Authenticate (Get Token)"])
+        UC2(["Score Single Applicant"])
+        UC3(["Score Batch Applicants"])
+        UC4(["Check System Health"])
+        UC5(["View Explainability (SHAP)"])
+        UC6(["Manage Models"])
+    end
+
+    %% Relationships
+    Lender --> UC1
+    Lender --> UC2
+    Lender --> UC3
+    Lender --> UC4
+
+    UC2 -. "<<includes>>" .-> UC5
+    UC3 -. "<<includes>>" .-> UC5
+
+    Admin --> UC6
+
+    classDef actor fill:#f9f,stroke:#333,stroke-width:2px;
+    class Lender,Admin actor;
+```
+
+### 2. Activity Diagram
+Details the step-by-step workflow of a single scoring request.
+
+```mermaid
+stateDiagram-v2
+    [*] --> ReceiveRequest: POST /v1/score
+    ReceiveRequest --> ValidateToken: Verify JWT
+    ValidateToken --> InvalidToken: Failed
+    InvalidToken --> [*]: 401 Unauthorized
+    ValidateToken --> ValidatePayload: Success
+    ValidatePayload --> InvalidPayload: Failed
+    InvalidPayload --> [*]: 422 Unprocessable Entity
+    ValidatePayload --> CheckCache: Success
+    CheckCache --> CacheHit: Match found
+    CacheHit --> ReturnResponse
+    CheckCache --> FeatureEngineering: No match
+    FeatureEngineering --> MLPrediction: LightGBM
+    MLPrediction --> SHAPExplanation: Generate Factors
+    SHAPExplanation --> LogDatabase: Save Request & Score
+    LogDatabase --> UpdateCache: Save Score
+    UpdateCache --> ReturnResponse: 200 OK
+    ReturnResponse --> [*]
+```
+
+### 3. Sequence Diagram
+Illustrates the exact sequence of messages passed between system components during a single scoring API call.
+
+```mermaid
+sequenceDiagram
+    actor Lender
+    participant API as FastAPI App
+    participant Cache as Redis
+    participant ML as ML Engine (LightGBM)
+    participant Explainer as SHAP Explainer
+    participant DB as PostgreSQL
+
+    Lender->>API: POST /v1/score (Borrower Data)
+    API->>API: Validate Payload
+    API->>Cache: Check cached result (Hash)
+    alt Cache Hit
+        Cache-->>API: Return Cached Score & Factors
+    else Cache Miss
+        API->>ML: Pass structured features
+        ML-->>API: Return Base Risk Score
+        API->>Explainer: Request SHAP values
+        Explainer-->>API: Return Top Risk Factors
+        API->>DB: Log (Borrower Data, Score, Factors)
+        DB-->>API: Confirm Logged
+        API->>Cache: Store (Score, Factors)
+    end
+    API-->>Lender: 200 OK (Risk Score, Risk Label, Top Factors)
+```
+
+### 4. Class Diagram
+Outlines the primary domain models and core service classes that drive the application logic.
+
+```mermaid
+classDiagram
+    class Lender {
+        +UUID id
+        +String name
+        +String api_key_hash
+        +Integer rate_limit
+        +DateTime created_at
+        +authenticate(api_key)
+    }
+
+    class BorrowerProfile {
+        +Integer age
+        +Float annual_income
+        +Float loan_amount
+        +String employment_status
+        +Integer credit_score
+        +Float debt_to_income
+        +validate_profile()
+    }
+
+    class RiskScore {
+        +UUID request_id
+        +Float probability
+        +String risk_label
+        +List top_risk_factors
+        +String recommendation
+    }
+
+    class ScoringRequestLog {
+        +UUID id
+        +UUID lender_id
+        +JSON input_payload
+        +JSON output_payload
+        +Integer latency_ms
+        +DateTime created_at
+    }
+
+    class PredictorService {
+        -LightGBM model
+        -SHAPExplainer explainer
+        +predict_single(BorrowerProfile) RiskScore
+        +predict_batch(List~BorrowerProfile~) List~RiskScore~
+    }
+
+    class ScoringRepository {
+        -Database db_session
+        +log_scoring_request(Lender, BorrowerProfile, RiskScore)
+        +get_request_history(Lender)
+    }
+
+    PredictorService ..> BorrowerProfile : consumes
+    PredictorService ..> RiskScore : produces
+    ScoringRepository ..> ScoringRequestLog : manages
+    Lender "1" -- "*" ScoringRequestLog : has
+```
+
+### 5. State Diagram
+Tracks the lifecycle states of an asynchronous batch scoring job handled by Celery.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Submitted: POST /v1/score/batch
+    Submitted --> Queued: Pushed to Redis Broker
+    Queued --> Processing: Celery Worker Picks Up
+    Processing --> Completed: All items scored successfully
+    Processing --> Failed: Unrecoverable error (e.g. Model missing)
+    Processing --> PartiallyCompleted: Some items failed validation
+
+    Completed --> [*]
+    Failed --> [*]
+    PartiallyCompleted --> [*]
+```
+
 ## 🛠️ Tech Stack
 
 - **Language:** Python 3.10+

@@ -289,7 +289,7 @@ The system exposes several key endpoints:
 - **Faculty:** Physical Sciences
 - **Department:** Computer Science
 - **Level:** 400 Level (Final Year)
-- **Developer:** [Your Name]
+- **Developer:** Samuel Oluwadamilare Madehin
 - **Supervisor:** [Supervisor's Name]
 
 ---

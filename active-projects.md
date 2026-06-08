@@ -33,11 +33,12 @@ Phase 5: Docs & Presentation [🔴··········] 0%
 - [x] Install base dependencies and generate `requirements.txt`
 - [x] Set up `.env` file with placeholder secrets
 - [x] Generate Nigerian-context synthetic dataset (`synthetic_ng_credit_data.csv`)
+- [ ] Download real Zindi datasets (African Credit Scoring & SuperLender) to `data/`
 - [ ] Configure VS Code / Antigravity IDE with Python linting (flake8 / pylint)
 - [x] Create initial `docker-compose.yml` with PostgreSQL + Redis services
 
 ### Next Action
-> 🎯 **Create the GitHub repository (`credit-risk-api`) and set up IDE.**
+> 🎯 **Create the GitHub repository (`credit-risk-api`), set up IDE, and download Zindi datasets to `data/`.**
 
 ### Blockers
 > None currently.
@@ -49,7 +50,8 @@ Phase 5: Docs & Presentation [🔴··········] 0%
 **Goal:** Clean, understand, and engineer features from the raw datasets
 
 ### Tasks
-- [ ] Load `synthetic_ng_credit_data.csv`
+- [ ] Load downloaded Zindi datasets from `data/`
+- [ ] Load `synthetic_ng_credit_data.csv` as supplementary
 - [ ] Run initial EDA (shape, dtypes, null counts, class distribution)
 - [ ] Identify and document key features for the model
 - [ ] Handle missing values (imputation strategy per feature type)

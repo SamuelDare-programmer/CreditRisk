@@ -107,7 +107,7 @@ The trained machine learning model powering the API.
 | Attribute          | Description                                          |
 |--------------------|------------------------------------------------------|
 | `algorithm`        | Best performer from: LR, RF, XGBoost, LightGBM      |
-| `training_data`    | Nigerian-context Synthetic Dataset (Zindi schemas)   |
+| `training_data`    | Real Zindi Competition Datasets (Primary) + Synthetic Dataset (Supplementary) |
 | `target_variable`  | `TARGET` — 1 = defaulted, 0 = repaid                |
 | `metric`           | AUC-ROC ≥ 0.85 on held-out test set                 |
 | `imbalance_strategy`| SMOTE oversampling on minority (default) class      |

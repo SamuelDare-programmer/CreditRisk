@@ -29,8 +29,8 @@ though all four models (LR, RF, XGBoost, LightGBM) will be trained and benchmark
 
 ---
 
-## [DEC-002] — Use Home Credit Default Risk as Primary Dataset
-**Date:** Project inception · **Category:** Data · **Status:** Accepted
+## [DEC-002] — Use Home Credit Default Risk as Primary Dataset (REPLACED BY DEC-011)
+**Date:** Project inception · **Category:** Data · **Status:** Superseded
 
 **Decision:** Home Credit Default Risk (Kaggle) is the primary training dataset,
 supplemented by Lending Club data.
@@ -270,3 +270,19 @@ app/
 | TBD-002 | JWT token storage strategy (DB vs stateless)?         | Phase 3     |
 | TBD-003 | Celery broker: Redis (current plan) vs RabbitMQ?      | Phase 3     |
 | TBD-004 | Model versioning: manual S3 keys vs MLflow?           | Phase 2–4   |
+
+---
+
+## [DEC-011] — Move from Kaggle Datasets to Nigerian-Context Synthetic Data
+**Date:** June 6, 2024 · **Category:** Data · **Status:** Accepted
+
+**Decision:** Pivot from using Kaggle datasets (Home Credit, Lending Club) to a custom-generated synthetic dataset specifically designed for the Nigerian fintech ecosystem, inspired by schemas from Zindi African Credit Scoring challenges.
+
+**Rationale:**
+- Kaggle datasets are heavily skewed towards US/European demographics and traditional banking systems.
+- A Nigerian-context model requires alternative data signals (e.g., BVN, USSD usage, Telco provider, active betting accounts, airtime spend).
+- Generating a synthetic dataset allows us to explicitly model "willingness to pay" vs. "ability to pay", and differentiate between "new" and "repeat" customers, as seen in regional hackathons.
+- Demonstrates deep domain awareness and custom engineering for the final year project defense.
+
+**Rejected Alternatives:**
+- Continuing with Home Credit dataset (lacks cultural relevance and alternative data signals critical in Nigeria).

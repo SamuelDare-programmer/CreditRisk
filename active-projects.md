@@ -32,12 +32,12 @@ Phase 5: Docs & Presentation [🔴··········] 0%
 - [x] Create and activate Python virtual environment (`venv` or `conda`)
 - [x] Install base dependencies and generate `requirements.txt`
 - [x] Set up `.env` file with placeholder secrets
-- [ ] Download datasets from Kaggle (Home Credit Default Risk + Lending Club)
+- [x] Generate Nigerian-context synthetic dataset (`synthetic_ng_credit_data.csv`)
 - [ ] Configure VS Code / Antigravity IDE with Python linting (flake8 / pylint)
 - [x] Create initial `docker-compose.yml` with PostgreSQL + Redis services
 
 ### Next Action
-> 🎯 **Create the GitHub repository (`credit-risk-api`) and download the datasets from Kaggle.**
+> 🎯 **Create the GitHub repository (`credit-risk-api`) and set up IDE.**
 
 ### Blockers
 > None currently.
@@ -49,15 +49,12 @@ Phase 5: Docs & Presentation [🔴··········] 0%
 **Goal:** Clean, understand, and engineer features from the raw datasets
 
 ### Tasks
-- [ ] Load `application_train.csv` from Home Credit dataset
+- [ ] Load `synthetic_ng_credit_data.csv`
 - [ ] Run initial EDA (shape, dtypes, null counts, class distribution)
 - [ ] Identify and document key features for the model
 - [ ] Handle missing values (imputation strategy per feature type)
 - [ ] Treat outliers (IQR / winsorisation)
-- [ ] Engineer new features:
-  - [ ] `DEBT_TO_INCOME` = `AMT_CREDIT` / `AMT_INCOME_TOTAL`
-  - [ ] `CREDIT_UTILISATION` = `AMT_CREDIT` / `AMT_GOODS_PRICE`
-  - [ ] `EMPLOYED_YEARS` from `DAYS_EMPLOYED`
+- [ ] Engineer new features (e.g., debt-to-income ratio based on `loan_amount` and `annual_income`)
 - [ ] Encode categorical features (`pd.get_dummies` or `OrdinalEncoder`)
 - [ ] Analyse class imbalance (expect ~8% default rate)
 - [ ] Apply SMOTE to training set

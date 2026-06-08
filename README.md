@@ -16,7 +16,7 @@ This project goes beyond simple prediction by integrating **SHAP (SHapley Additi
 - **High-Performance ML Model:** Built using LightGBM, optimized for tabular financial data with an AUC-ROC target of ≥ 0.85.
 - **Real-time Explainability:** Every API response includes the top risk factors powered by SHAP.
 - **Production-Ready API:** Developed with FastAPI, featuring async support, JWT authentication, and automated Swagger documentation.
-- **Robust Data Handling:** Engineered to handle "thin-file" borrowers using alternative credit signals common in the Nigerian context.
+- **Robust Data Handling:** Engineered to handle "thin-file" borrowers using alternative credit signals common in the Nigerian context (e.g. BVN, mobile money, USSD usage). Trained on a specialized contextual synthetic dataset.
 - **Containerized Deployment:** Full stack orchestration using Docker and Docker Compose, ready for AWS deployment.
 
 ## 🏗️ System Architecture

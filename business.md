@@ -20,7 +20,7 @@ workflows.
 | Problem                                              | This System's Solution                              |
 |------------------------------------------------------|-----------------------------------------------------|
 | Manual credit assessment is slow and subjective      | ML model returns a risk score in milliseconds       |
-| High default rates due to limited data signals       | Feature-rich model trained on real loan datasets    |
+| High default rates due to limited data signals       | Feature-rich model trained on contextual synthetic loan datasets    |
 | Borrowers get rejections with no explanation         | SHAP values explain every decision in plain English |
 | Lenders can't audit black-box model decisions        | Full explainability layer baked into every response |
 
@@ -36,6 +36,10 @@ relevant to this project:
 - Credit bureau penetration remains low — many borrowers have **no formal credit history**
 - Features like **BVN (Bank Verification Number)** linkage, mobile money activity,
   and utility payments are increasingly used as alternative credit signals
+- **Zindi Africa** challenges highlight the need for a dual assessment approach:
+  1) **Willingness to pay** and 2) **Ability to pay**.
+- Credit models must differentiate between **New Business Risk** (first loan) and
+  **Behavioral Risk** (repeat customers).
 - Target lenders: **Carbon**, **FairMoney**, **PalmCredit**, **Renmoney**, **Migo**
 
 > ⚠️ **Design implication:** The model must perform well on thin-file borrowers
@@ -68,14 +72,18 @@ The loan applicant's data submitted per scoring request.
 | `annual_income`        | float   | Gross annual income in NGN                 |
 | `loan_amount`          | float   | Requested loan amount in NGN               |
 | `loan_purpose`         | str     | Purpose (personal, business, education...) |
-| `employment_years`     | float   | Years at current/last employer             |
 | `employment_status`    | str     | Employed, Self-employed, Unemployed        |
-| `credit_score`         | int     | Bureau score if available (300–850)        |
-| `num_existing_loans`   | int     | Number of active loans                     |
-| `debt_to_income`       | float   | Computed: total debt / annual income       |
-| `credit_utilisation`   | float   | Computed: credit used / credit limit       |
+| `has_bvn`              | bool    | BVN verification status                    |
+| `telco_provider`       | str     | MTN, Airtel, Glo, 9mobile                  |
+| `monthly_airtime_spend`| float   | Monthly airtime usage in NGN               |
+| `active_betting_account`| bool   | Active betting account indicator           |
+| `ussd_bank_usage`      | int     | Number of USSD banking sessions/month      |
+| `is_repeat_customer`   | bool    | Indicates if repeat borrower               |
 | `loan_term_months`     | int     | Requested repayment period                 |
 
+---
+
+### 3.3 Risk Score
 ---
 
 ### 3.3 Risk Score (API Output)
@@ -99,7 +107,7 @@ The trained machine learning model powering the API.
 | Attribute          | Description                                          |
 |--------------------|------------------------------------------------------|
 | `algorithm`        | Best performer from: LR, RF, XGBoost, LightGBM      |
-| `training_data`    | Home Credit + Lending Club datasets (Kaggle)         |
+| `training_data`    | Nigerian-context Synthetic Dataset (Zindi schemas)   |
 | `target_variable`  | `TARGET` — 1 = defaulted, 0 = repaid                |
 | `metric`           | AUC-ROC ≥ 0.85 on held-out test set                 |
 | `imbalance_strategy`| SMOTE oversampling on minority (default) class      |

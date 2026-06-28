@@ -143,7 +143,9 @@ if __name__ == "__main__":
     print("Generating Nigerian synthetic credit dataset...")
     df = generate_synthetic_data(num_samples=25000)
 
-    output_path = os.path.join(os.path.dirname(__file__), 'synthetic_ng_credit_data.csv')
+    output_dir = os.path.join(os.path.dirname(__file__), 'data')
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, 'synthetic_ng_credit_data.csv')
     df.to_csv(output_path, index=False)
 
     print(f"Dataset saved to: {output_path}")

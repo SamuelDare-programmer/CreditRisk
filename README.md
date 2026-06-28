@@ -57,8 +57,8 @@ Following a feature-based Object-Oriented design:
 ├── ml/                   # Machine Learning Layer
 │   ├── notebooks/        # EDA and Training Experiments
 │   ├── src/              # Production ML Classes (Trainer, Explainer)
+│   ├── data/             # Raw and Processed Datasets (Gitignored)
 │   └── artefacts/        # Serialized Model Files (.pkl)
-├── data/                 # Raw and Processed Datasets (Gitignored)
 ├── tests/                # Unit and Integration Tests
 ├── Dockerfile            # Container Definition
 └── docker-compose.yml    # Multi-container Orchestration

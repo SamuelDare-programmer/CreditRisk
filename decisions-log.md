@@ -274,7 +274,7 @@ app/
 ---
 
 ## [DEC-011] — Move from Kaggle Datasets to Nigerian-Context Synthetic Data
-**Date:** June 6, 2024 · **Category:** Data · **Status:** Accepted
+**Date:** June 6, 2024 · **Category:** Data · **Status:** Superseded
 
 **Decision:** Pivot from using Kaggle datasets (Home Credit, Lending Club) to a custom-generated synthetic dataset specifically designed for the Nigerian fintech ecosystem, inspired by schemas from Zindi African Credit Scoring challenges.
 
@@ -286,3 +286,19 @@ app/
 
 **Rejected Alternatives:**
 - Continuing with Home Credit dataset (lacks cultural relevance and alternative data signals critical in Nigeria).
+
+
+---
+
+## [DEC-012] — Use Real Zindi Datasets as Primary Data Source
+**Date:** June 6, 2024 · **Category:** Data · **Status:** Accepted
+
+**Decision:** The primary training data will be the real datasets from the Zindi "African Credit Scoring Challenge" and the "Loan Default Prediction Challenge" (SuperLender). The synthetic dataset generated in DEC-011 will be retained as a supplementary tool.
+
+**Rationale:**
+- Real data is mathematically and academically superior to synthetic data for a final year project, as it contains authentic real-world noise, missing values, and behavioral patterns.
+- The Zindi datasets perfectly capture the African/Nigerian ecosystem (e.g., differentiating between willingness vs. ability to pay, and new vs. repeat business risk).
+- The synthetic generator remains valuable for edge-case testing, data augmentation, and demonstrating engineering capability.
+
+**Rejected Alternatives:**
+- Relying purely on synthetic data (lacks the statistical rigor of real human behavioral data).

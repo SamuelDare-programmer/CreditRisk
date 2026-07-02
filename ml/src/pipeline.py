@@ -179,11 +179,30 @@ class CreditRiskPipeline:
             X_test_processed, y_test
         )
 
-        # 9. Save best model + preprocessor
+        # 9. Save best model + preprocessor + explainer
         logger.info("Stage 9/9 — Saving artefacts …")
         best_name, best_model = self.trainer.get_best_model()
         self.trainer.save_model(best_model, self.config.model_save_path)
         self.preprocessor.save(self.config.preprocessor_save_path)
+
+        # Build and save SHAPExplainer
+        from ml.src.shap_explainer import SHAPExplainer
+        
+        # Use background data to initialize explainer
+        # For linear models, the background data represents reference expectations
+        logger.info("Building SHAPExplainer...")
+        background_data = X_train_processed[:100]
+        explainer = SHAPExplainer(best_model, self.preprocessor, background_data)
+        explainer.save(self.config.explainer_save_path)
+
+        # Test explanation on a sample borrower from X_test (before transformation)
+        try:
+            logger.info("Testing SHAP explanation on a sample test borrower...")
+            sample_borrower = X_test.iloc[[0]]
+            explanation = explainer.explain(sample_borrower)
+            logger.info("SHAP Top Risk Factors for sample applicant: %s", explanation)
+        except Exception as e:
+            logger.warning("Failed to run test SHAP explanation: %s", e)
 
         # Final summary
         best_auc = evaluation_results[best_name]["auc_roc"]

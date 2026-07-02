@@ -51,10 +51,7 @@ def tune_hyperparameters() -> None:
     
     # 5. Transform features (ColumnTransformer only, no SMOTE here as SMOTE goes inside grid CV)
     preprocessor = Preprocessor(config)
-    # Fit column transformer
-    X_train_transformed = preprocessor.column_transformer = preprocessor._build_column_transformer().fit(X_train)
-    preprocessor._is_fitted = True
-    X_train_proc = preprocessor.column_transformer.transform(X_train)
+    X_train_proc, _ = preprocessor.fit_transform(X_train, y_train, use_smote=False)
     
     logger.info("Transformed features shape: %s", X_train_proc.shape)
     

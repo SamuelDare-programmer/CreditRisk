@@ -218,7 +218,7 @@ class ModelTrainer:
 
         return {
             "LogisticRegression": LogisticRegression(
-                C=1.0,
+                C=0.01,
                 penalty="l2",
                 max_iter=1000,
                 solver="lbfgs",
@@ -233,8 +233,8 @@ class ModelTrainer:
                 class_weight="balanced" if use_cw else None,
             ),
             "XGBoost": XGBClassifier(
-                learning_rate=0.1,
-                max_depth=6,
+                learning_rate=0.05,
+                max_depth=3,
                 n_estimators=200,
                 random_state=rs,
                 use_label_encoder=False,
@@ -242,9 +242,10 @@ class ModelTrainer:
                 # scale_pos_weight is set dynamically during training if use_cw is True
             ),
             "LightGBM": LGBMClassifier(
-                learning_rate=0.1,
-                num_leaves=31,
+                learning_rate=0.01,
+                max_depth=6,
                 n_estimators=200,
+                num_leaves=63,
                 random_state=rs,
                 verbose=-1,
                 is_unbalance=use_cw,

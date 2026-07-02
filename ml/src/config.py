@@ -26,6 +26,7 @@ class PipelineConfig:
     # --- Serialisation paths ---
     model_save_path: str = "ml/artefacts/model.pkl"
     preprocessor_save_path: str = "ml/artefacts/preprocessor.pkl"
+    explainer_save_path: str = "ml/artefacts/explainer.pkl"
 
     # --- Reproducibility and split parameters ---
     random_state: int = 42

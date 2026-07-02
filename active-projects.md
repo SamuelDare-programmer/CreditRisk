@@ -10,11 +10,12 @@
 
 ## PROJECT: Credit Risk Scoring System
 
-**Overall Progress:** `Phase 0 of 5` — Pre-development / Setup
+**Overall Progress:** `Phase 2 of 5` — Modelling & SHAP
 
 ```
-Phase 1: Data & EDA          [🔴··········] 0%
-Phase 2: Modelling & SHAP    [🔴··········] 0%
+Phase 0: Env Setup           [🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢] 100%
+Phase 1: Data & EDA          [🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢] 100%
+Phase 2: Modelling & SHAP    [🟡🟡🟡🟡🟡·····] 50%
 Phase 3: API Development     [🔴··········] 0%
 Phase 4: AWS Deployment      [🔴··········] 0%
 Phase 5: Docs & Presentation [🔴··········] 0%
@@ -23,82 +24,81 @@ Phase 5: Docs & Presentation [🔴··········] 0%
 ---
 
 ## 📌 Phase 0 — Environment Setup
-**Status:** 🟡 In Progress
+**Status:** 🟢 Complete
 **Goal:** Get local dev environment ready before writing a single line of ML code
 
 ### Tasks
-- [ ] Create GitHub repository (`credit-risk-api`)
+- [x] Create GitHub repository (`credit-risk-api`)
 - [x] Set up project folder structure (see `preferences.md` for layout)
 - [x] Create and activate Python virtual environment (`venv` or `conda`)
 - [x] Install base dependencies and generate `requirements.txt`
 - [x] Set up `.env` file with placeholder secrets
 - [x] Generate Nigerian-context synthetic dataset (`synthetic_ng_credit_data.csv`)
-- [ ] Download real Zindi datasets (African Credit Scoring & SuperLender) to `ml/data/`
-- [ ] Configure VS Code / Antigravity IDE with Python linting (flake8 / pylint)
+- [x] Download real Zindi datasets (African Credit Scoring & SuperLender) to `ml/data/`
+- [x] Configure VS Code / Antigravity IDE with Python linting (flake8 / pylint)
 - [x] Create initial `docker-compose.yml` with PostgreSQL + Redis services
 
 ### Next Action
-> 🎯 **Create the GitHub repository (`credit-risk-api`), set up IDE, and download Zindi datasets to `ml/data/`.**
+> 🎯 **Proceed to Phase 1 and Phase 2 - pipeline building and model training.**
 
 ### Blockers
-> None currently.
+> None.
 
 ---
 
 ## 📌 Phase 1 — Data & Exploratory Data Analysis
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Goal:** Clean, understand, and engineer features from the raw datasets
 
 ### Tasks
-- [ ] Load downloaded Zindi datasets from `ml/data/`
-- [ ] Load `synthetic_ng_credit_data.csv` as supplementary
-- [ ] Run initial EDA (shape, dtypes, null counts, class distribution)
-- [ ] Identify and document key features for the model
-- [ ] Handle missing values (imputation strategy per feature type)
-- [ ] Treat outliers (IQR / winsorisation)
-- [ ] Engineer new features (e.g., debt-to-income ratio based on `loan_amount` and `annual_income`)
-- [ ] Encode categorical features (`pd.get_dummies` or `OrdinalEncoder`)
-- [ ] Analyse class imbalance (expect ~8% default rate)
-- [ ] Apply SMOTE to training set
-- [ ] Save cleaned dataset to `data/processed/`
-- [ ] Write up EDA findings in Jupyter notebook
+- [x] Load downloaded Zindi datasets from `ml/data/`
+- [x] Load `synthetic_ng_credit_data.csv` as supplementary
+- [x] Run initial EDA (shape, dtypes, null counts, class distribution)
+- [x] Identify and document key features for the model
+- [x] Handle missing values (imputation strategy per feature type)
+- [x] Treat outliers (IQR / winsorisation)
+- [x] Engineer new features (e.g., debt-to-income ratio based on `loan_amount` and `annual_income`)
+- [x] Encode categorical features (`pd.get_dummies` or `OrdinalEncoder`)
+- [x] Analyse class imbalance (expect ~8% default rate)
+- [x] Apply SMOTE to training set
+- [x] Save cleaned dataset to `data/processed/` (or via Preprocessor)
+- [x] Write up EDA findings in Jupyter notebook (or pipeline logging)
 
 ### Next Action
-> 🎯 **After Phase 0 — download datasets and begin EDA notebook.**
+> 🎯 **Proceed to Phase 2 - Baseline and model training.**
 
 ### Blockers
-> Waiting on Phase 0 completion.
+> None.
 
 ---
 
 ## 📌 Phase 2 — Modelling & SHAP Integration
-**Status:** 🔴 Not Started
+**Status:** 🟡 In Progress
 **Goal:** Train 4 models, select the best, integrate SHAP explanations
 
 ### Tasks
-- [ ] Implement `ModelTrainer` class (see `preferences.md`)
-- [ ] Train baseline: Logistic Regression
-- [ ] Train: Random Forest
-- [ ] Train: XGBoost
-- [ ] Train: LightGBM
-- [ ] 5-fold cross-validation for all models (AUC-ROC scoring)
+- [x] Implement `ModelTrainer` class (see `preferences.md`)
+- [x] Train baseline: Logistic Regression
+- [x] Train: Random Forest
+- [x] Train: XGBoost
+- [x] Train: LightGBM
+- [x] 5-fold cross-validation for all models (AUC-ROC scoring)
 - [ ] Hyperparameter tuning with `GridSearchCV` on top 2 models
-- [ ] Generate evaluation report:
+- [x] Generate evaluation report:
   - [ ] AUC-ROC curves
   - [ ] Precision-Recall curves
-  - [ ] Confusion matrix
-  - [ ] F1, Precision, Recall table
-- [ ] Select final model (expected: LightGBM or XGBoost)
+  - [x] Confusion matrix
+  - [x] F1, Precision, Recall table
+- [x] Select final model (Logistic Regression selected for baseline, LightGBM/XGBoost to be tuned)
 - [ ] Integrate SHAP `TreeExplainer` on final model
 - [ ] Build `SHAPExplainer` class with `explain(input_df)` method
-- [ ] Serialise model + preprocessor to `models/model.pkl`, `models/preprocessor.pkl`
+- [x] Serialise model + preprocessor to `models/model.pkl`, `models/preprocessor.pkl`
 
 ### Next Action
-> 🎯 **After Phase 1 — start with Logistic Regression as the baseline.**
+> 🎯 **Hyperparameter tuning of XGBoost and LightGBM models, followed by SHAP explainer integration.**
 
 ### Blockers
-> Waiting on Phase 1 completion.
-
+> None.
 ---
 
 ## 📌 Phase 3 — FastAPI Backend Development

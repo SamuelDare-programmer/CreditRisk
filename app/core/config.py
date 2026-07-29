@@ -6,32 +6,31 @@ for environment variable management and validation.
 """
 
 import os
-from typing import Optional
+from contextlib import asynccontextmanager
+from typing import AsyncGenerator, Optional
 
 from pydantic_settings import BaseSettings
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.orm import DeclarativeBase
 
 
 class Settings(BaseSettings):
-    """
-    Application settings loaded from environment variables.
-
-    Attributes:
-        PROJECT_NAME: Name of the project.
-        VERSION: Version of the application.
-        DESCRIPTION: Description of the application.
-        API_V1_STR: API version string.
-        SECRET_KEY: Secret key for JWT or other security.
-        DATABASE_URL: URL for the database connection.
-        DEBUG: Debug mode flag.
-    """
+    """Application settings loaded from environment variables."""
 
     PROJECT_NAME: str = "Credit Risk Scoring System"
-    VERSION: str = "0.1.0"
-    DESCRIPTION: str = "API for credit risk scoring using machine learning"
+    VERSION: str = "1.0.0"
+    DESCRIPTION: str = (
+        "RESTful API for credit risk scoring with interactive SHAP explanations"
+    )
     API_V1_STR: str = "/api/v1"
-    SECRET_KEY: str = "your-secret-key-here"  # TODO: Move to .env
-    DATABASE_URL: Optional[str] = None
+    SECRET_KEY: str = "dev-secret-key-change-in-prod"
+    DATABASE_URL: str = "sqlite+aiosqlite:///./data/credit_risk.db"
     DEBUG: bool = True
+
+    # --- ML Artifact Paths ---
+    MODEL_PATH: str = "ml/artefacts/model.pkl"
+    PREPROCESSOR_PATH: str = "ml/artefacts/preprocessor.pkl"
+    EXPLAINER_PATH: str = "ml/artefacts/explainer.pkl"
 
     class Config:
         """Pydantic configuration."""
@@ -39,3 +38,29 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+
+# --- SQLAlchemy Async Setup ---
+
+class Base(DeclarativeBase):
+    """SQLAlchemy declarative base for all ORM models."""
+    pass
+
+
+# Ensure the data directory exists for SQLite
+os.makedirs("data", exist_ok=True)
+
+engine = create_async_engine(settings.DATABASE_URL, echo=False)
+async_session_factory = async_sessionmaker(engine, expire_on_commit=False)
+
+
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    """Provide an async database session via dependency injection."""
+    async with async_session_factory() as session:
+        yield session
+
+
+async def init_db() -> None:
+    """Create all database tables on application startup."""
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)

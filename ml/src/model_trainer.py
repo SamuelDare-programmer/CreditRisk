@@ -15,6 +15,7 @@ from lightgbm import LGBMClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
+    average_precision_score,
     confusion_matrix,
     f1_score,
     log_loss,
@@ -175,14 +176,14 @@ class ModelTrainer:
 
         best_name: str = max(
             self.evaluation_results,
-            key=lambda n: self.evaluation_results[n]["auc_roc"],
+            key=lambda n: self.evaluation_results[n]["pr_auc"],
         )
         best_model = self.models[best_name]
 
         logger.info(
-            "Best model: %s (AUC-ROC: %.4f)",
+            "Best model: %s (PR-AUC: %.4f)",
             best_name,
-            self.evaluation_results[best_name]["auc_roc"],
+            self.evaluation_results[best_name]["pr_auc"],
         )
         return best_name, best_model
 
@@ -329,6 +330,7 @@ class ModelTrainer:
 
         return {
             "auc_roc": float(roc_auc_score(y_test, y_proba)),
+            "pr_auc": float(average_precision_score(y_test, y_proba)),
             "f1": float(f1_score(y_test, y_pred)),
             "precision": float(precision_score(y_test, y_pred)),
             "recall": float(recall_score(y_test, y_pred)),
@@ -338,7 +340,7 @@ class ModelTrainer:
 
     def _log_comparison_table(self) -> None:
         """Log a formatted comparison table of all evaluation results."""
-        header = f"{'Model':<22} {'AUC-ROC':>8} {'F1':>8} {'Prec':>8} {'Recall':>8} {'LogLoss':>8}"
+        header = f"{'Model':<22} {'AUC-ROC':>8} {'PR-AUC':>8} {'F1':>8} {'Prec':>8} {'Recall':>8} {'LogLoss':>8}"
         separator = "-" * len(header)
 
         logger.info("\n%s\n%s", header, separator)
@@ -347,6 +349,7 @@ class ModelTrainer:
             row = (
                 f"{name:<22} "
                 f"{metrics['auc_roc']:>8.4f} "
+                f"{metrics['pr_auc']:>8.4f} "
                 f"{metrics['f1']:>8.4f} "
                 f"{metrics['precision']:>8.4f} "
                 f"{metrics['recall']:>8.4f} "

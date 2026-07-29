@@ -206,10 +206,12 @@ class CreditRiskPipeline:
 
         # Final summary
         best_auc = evaluation_results[best_name]["auc_roc"]
+        best_pr_auc = evaluation_results[best_name]["pr_auc"]
         logger.info(
-            "Pipeline complete — Best model: %s | AUC-ROC: %.4f",
+            "Pipeline complete — Best model: %s | AUC-ROC: %.4f | PR-AUC: %.4f",
             best_name,
             best_auc,
+            best_pr_auc,
         )
 
         return {
@@ -217,6 +219,7 @@ class CreditRiskPipeline:
             "evaluation_results": evaluation_results,
             "best_model_name": best_name,
             "best_auc_roc": best_auc,
+            "best_pr_auc": best_pr_auc,
         }
 
     # ------------------------------------------------------------------

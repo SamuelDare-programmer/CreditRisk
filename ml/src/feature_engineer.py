@@ -6,6 +6,7 @@ repayment reliability, and loan escalation flags) and drops raw timestamps.
 
 import logging
 
+import numpy as np
 import pandas as pd
 
 from ml.src.config import PipelineConfig
@@ -53,6 +54,9 @@ class FeatureEngineer:
 
         # Step 5: Create repayment and history escalation features
         df = self._create_repayment_features(df)
+
+        # Step 5.5: Engineer Nigerian specific features (if available)
+        df = self._engineer_nigerian_features(df)
 
         # Step 6: Drop raw timestamp and non-predictive sequence columns
         df = self._drop_raw_dates(df)
@@ -164,6 +168,39 @@ class FeatureEngineer:
 
             # Flag if the requested loan is significantly larger (>50%) than their previous average
             df["loan_escalation_flag"] = (df["loan_amount_vs_prev_avg"] > 1.5).astype(int)
+
+        return df
+
+    def _engineer_nigerian_features(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Engineer features specific to the Nigerian lending context.
+
+        Creates derived features from alternative data signals such as BVN
+        verification, USSD transaction volume, and mobile spending patterns.
+        Only applies when the relevant columns are present in the dataset.
+
+        Args:
+            df: DataFrame potentially containing Nigerian-specific columns.
+
+        Returns:
+            DataFrame with additional Nigerian-derived features.
+        """
+        # Debt-to-income ratio (Nigerian currency)
+        if "loan_amount" in df.columns and "annual_income" in df.columns:
+            df["debt_to_income_ratio"] = df["loan_amount"] / df["annual_income"].replace(0, np.nan)
+            df["debt_to_income_ratio"] = df["debt_to_income_ratio"].fillna(0)
+            logger.info("Engineered: debt_to_income_ratio")
+
+        # Airtime-to-income ratio (spending behaviour proxy)
+        if "monthly_airtime_spend" in df.columns and "annual_income" in df.columns:
+            monthly_income = df["annual_income"] / 12
+            df["airtime_to_income_ratio"] = df["monthly_airtime_spend"] / monthly_income.replace(0, np.nan)
+            df["airtime_to_income_ratio"] = df["airtime_to_income_ratio"].fillna(0)
+            logger.info("Engineered: airtime_to_income_ratio")
+
+        # Late payment rate from previous loans
+        if "previous_late_payments" in df.columns and "previous_loans_count" in df.columns:
+            df["late_payment_rate"] = df["previous_late_payments"] / df["previous_loans_count"].replace(0, 1)
+            logger.info("Engineered: late_payment_rate")
 
         return df
 

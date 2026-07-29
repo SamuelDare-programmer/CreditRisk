@@ -118,6 +118,56 @@ class SHAPExplainer:
 
         return explanations[:top_n]
 
+    def generate_waterfall_plot(self, input_df: pd.DataFrame) -> str:
+        """Generate a SHAP waterfall plot as a base64-encoded PNG string.
+
+        Creates a visual waterfall plot showing how each feature contributes
+        to pushing the model output from the base value (expected value)
+        to the actual prediction for a single applicant.
+
+        Args:
+            input_df: Single-row DataFrame containing raw applicant features.
+
+        Returns:
+            Base64-encoded PNG image string of the SHAP waterfall plot.
+        """
+        if len(input_df) != 1:
+            raise ValueError("Waterfall plot expects exactly one row.")
+
+        import io
+        import base64
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+
+        # Transform inputs using the preprocessor
+        X_transformed = self.preprocessor.transform(input_df)
+
+        # Compute SHAP values
+        shap_values = self.explainer(X_transformed)
+
+        # Extract the Explanation object for the first (and only) row
+        # Handle binary classification: select class 1 (default)
+        if hasattr(shap_values, "values") and len(shap_values.values.shape) > 2:
+            explanation = shap_values[0, :, 1]
+        else:
+            explanation = shap_values[0]
+
+        # Generate waterfall plot
+        fig = plt.figure(figsize=(10, 6))
+        shap.waterfall_plot(explanation, max_display=10, show=False)
+        plt.title("SHAP Waterfall — Feature Contributions to Default Risk", fontsize=12)
+        plt.tight_layout()
+
+        buf = io.BytesIO()
+        plt.savefig(buf, format="png", dpi=150, bbox_inches="tight")
+        plt.close(fig)
+        buf.seek(0)
+
+        encoded = base64.b64encode(buf.read()).decode("utf-8")
+        logger.info("Generated SHAP waterfall plot (%d bytes encoded)", len(encoded))
+        return encoded
+
     def save(self, path: str) -> None:
         """Serialise the SHAPExplainer instance to disk.
 

@@ -302,3 +302,28 @@ app/
 
 **Rejected Alternatives:**
 - Relying purely on synthetic data (lacks the statistical rigor of real human behavioral data).
+
+---
+
+## [DEC-013] — Exclude Macroeconomic Indicators from Pipeline
+**Date:** July 2, 2026 · **Category:** Data · **Status:** Accepted
+
+**Decision:** Macroeconomic indicators (from `economic_indicators.csv`) will be omitted from the models.
+
+**Rationale:**
+- The macro dataset is highly aggregate (country + year level) and contains many missing values for key metrics.
+- Merging country-level, annual data (e.g. GDP, inflation) into individual micro-loan records is likely to cause overfitting, as the models can easily memorize country-year pairs.
+- Alternative behavioural features (telco provider, USSD bank usage, previous late repayments) provide far stronger risk signals for credit underwriting digital borrowers.
+
+---
+
+## [DEC-014] — Benchmark Imbalance Strategies & Resolve CV Data Leakage
+**Date:** July 2, 2026 · **Category:** Machine Learning · **Status:** Accepted
+
+**Decision:** Benchmark two main class-imbalance strategies (SMOTE vs Class Weight) and resolve cross-validation leakage by applying SMOTE strictly inside training splits (via `imblearn` pipeline) rather than pre-resampling the entire training set.
+
+**Rationale:**
+- A common mistake in credit scoring pipelines is running cross-validation on pre-resampled datasets, leading to inflated validation metrics (~0.92 AUC-ROC) due to synthetic samples leaking into validation folds. Wrapping SMOTE inside an `imblearn` pipeline exposes the true generalization capability (~0.68 AUC-ROC).
+- Benchmarking both SMOTE and cost-sensitive class weights (`class_weight='balanced'`, `scale_pos_weight`, `is_unbalance=True`) provides a rigorous comparison for academic project defense.
+- Logistic Regression was selected as the best baseline performer (0.7191 AUC-ROC on test set).
+

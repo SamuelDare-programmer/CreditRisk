@@ -1,23 +1,33 @@
-# Use Python 3.11 slim image
+# Credit Risk Scoring System
+# Multi-service Docker image for FastAPI backend and Streamlit frontend
 FROM python:3.11-slim
 
-# Set working directory
 WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Copy application code and ML pipeline
 COPY app/ ./app/
+COPY ml/ ./ml/
+COPY streamlit_app.py .
 
-# Expose port
-EXPOSE 8000
+# Create data directory for SQLite database
+RUN mkdir -p ./data
 
-# Run the application
+# Expose ports for FastAPI (8000) and Streamlit (8501)
+EXPOSE 8000 8501
+
+# Health check against the FastAPI health endpoint
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD curl -f http://localhost:8000/api/v1/health || exit 1
+
+# Default: run the FastAPI backend
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

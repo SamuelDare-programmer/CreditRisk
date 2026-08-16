@@ -1,0 +1,2 @@
+# This directory holds serialised ML artefacts (model.pkl, preprocessor.pkl)
+# These files are gitignored — only the .gitkeep is committed.

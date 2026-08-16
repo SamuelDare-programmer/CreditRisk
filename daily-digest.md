@@ -162,3 +162,34 @@ Restructured the API architecture to a feature-based organization as requested, 
 
 **Next Session:** Create GitHub repository and download Kaggle datasets
 ---
+
+## [2026-07-02] — Preprocessing Pipeline and Baseline Model Benchmarks
+
+**Phase:** Phase 1 (Data & EDA) and Phase 2 (Modelling)
+**Time Spent:** ~4 hours
+**Summary:**
+Designed, implemented, and executed a unified, production-grade credit risk preprocessing pipeline. Resolved critical data quality issues (sparse columns, date formatting) and fixed a classic cross-validation data leakage bug under SMOTE resampling by applying SMOTE strictly inside validation folds using an `imblearn` pipeline. Ran baseline model training for Logistic Regression, Random Forest, XGBoost, and LightGBM using two strategies: SMOTE vs Class Weight. Regularised Logistic Regression was the top performer on the SuperLender test set (0.7191 AUC-ROC).
+
+**Changes Made:**
+- Created ML configuration schema in `ml/src/config.py`.
+- Created robust abstract `DataLoader` and concrete loaders in `ml/src/data_loader.py` supporting join logic and previous loan history aggregation.
+- Created `DataCleaner` in `ml/src/data_cleaner.py` with median/Unknown imputation and outlier winsorisation.
+- Created `FeatureEngineer` in `ml/src/feature_engineer.py` containing borrower age, fee ratios, and repayment reliability.
+- Refactored `Preprocessor` in `ml/src/preprocessor.py` to auto-detect feature types and support preprocessing with/without SMOTE.
+- Refactored `ModelTrainer` in `ml/src/model_trainer.py` to implement leakage-free cross-validation and support cost-sensitive class weights.
+- Refactored `pipeline.py` CLI to accept `--imbalance` argparse settings.
+- Restructured `venv` to solve broken absolute paths from previous renaming and successfully installed all dependencies (including `xgboost`, `imbalanced-learn`, and `joblib`).
+
+**Decisions Made:**
+- Exclude macro-economic indicators from training to prevent overfitting.
+- Resolve data leakage bug by encapsulating SMOTE inside stratified folds.
+- Benchmark SMOTE vs. Class Weight (Logistic Regression is best baseline).
+
+**Blockers:** Broken absolute paths in python environment (resolved by recreating virtual environment).
+
+**Next Session:**
+> 🎯 **Phase 2 — Modelling & SHAP Integration**
+> 1. Perform hyperparameter tuning on top models (Logistic Regression, LightGBM, XGBoost).
+> 2. Implement SHAP explainer integration to generate credit decision reasons.
+> 3. Verify predictions and SHAP explanations locally.
+---

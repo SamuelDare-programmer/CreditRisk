@@ -116,7 +116,7 @@ class DataCleaner:
             DataFrame with parsed datetime columns.
         """
         df = df.copy()
-        date_keywords = ["date", "birth", "creation", "approved", "time"]
+        date_keywords = ["date", "birth", "creation", "approved"]
 
         for col in df.columns:
             if any(kw in col.lower() for kw in date_keywords):

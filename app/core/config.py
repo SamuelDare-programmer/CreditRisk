@@ -25,6 +25,15 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = "dev-secret-key-change-in-prod"
     DATABASE_URL: str = "sqlite+aiosqlite:///./data/credit_risk.db"
+
+    @property
+    def async_database_url(self) -> str:
+        """Convert standard postgres urls to asyncpg urls."""
+        if self.DATABASE_URL.startswith("postgres://"):
+            return self.DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
+        if self.DATABASE_URL.startswith("postgresql://"):
+            return self.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return self.DATABASE_URL
     DEBUG: bool = True
 
     # --- ML Artifact Paths ---
@@ -50,7 +59,7 @@ class Base(DeclarativeBase):
 # Ensure the data directory exists for SQLite
 os.makedirs("data", exist_ok=True)
 
-engine = create_async_engine(settings.DATABASE_URL, echo=False)
+engine = create_async_engine(settings.async_database_url, echo=False)
 async_session_factory = async_sessionmaker(engine, expire_on_commit=False)
 
 

@@ -1,0 +1,41 @@
+databases:
+  - name: credit-risk-db
+    databaseName: creditrisk
+    user: creditrisk_user
+    plan: free
+
+services:
+  - type: web
+    name: credit-risk-api
+    env: docker
+    dockerfilePath: ./Dockerfile
+    # Use PORT environment variable as Render expects
+    dockerCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: credit-risk-db
+          property: connectionString
+
+  - type: web
+    name: credit-risk-frontend
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerCommand: streamlit run streamlit_app.py --server.port=$PORT --server.address=0.0.0.0
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: API_URL
+        fromService:
+          type: web
+          name: credit-risk-api
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: API_KEY
+        fromService:
+          type: web
+          name: credit-risk-api
+          envVarKey: SECRET_KEY

@@ -7,6 +7,7 @@ databases:
 services:
   - type: web
     name: credit-risk-api
+    plan: free
     env: docker
     dockerfilePath: ./Dockerfile
     # Use PORT environment variable as Render expects
@@ -23,6 +24,7 @@ services:
 
   - type: web
     name: credit-risk-frontend
+    plan: free
     env: docker
     dockerfilePath: ./Dockerfile
     dockerCommand: streamlit run streamlit_app.py --server.port=$PORT --server.address=0.0.0.0

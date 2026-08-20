@@ -25,9 +25,9 @@ RUN mkdir -p ./data
 # Expose ports for FastAPI (8000) and Streamlit (8501)
 EXPOSE 8000 8501
 
-# Health check against the FastAPI health endpoint
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
-    CMD curl -f http://localhost:8000/api/v1/health || exit 1
+# Copy and configure startup script
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
-# Default: run the FastAPI backend
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run the startup script
+CMD ["/start.sh"]

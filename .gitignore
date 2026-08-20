@@ -129,10 +129,13 @@ dmypy.json
 .pyre/
 
 # Data files
-ml/data/# 
+ml/data/
 *.csv
 *.pkl
 *.joblib
+
+# Allow ML artifacts to be tracked
+!ml/artefacts/*.pkl
 
 # Saved models
 saved_models/

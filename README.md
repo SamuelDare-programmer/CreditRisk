@@ -98,19 +98,18 @@ The API will be available at `http://localhost:8000`. Access the interactive doc
 ## 📊 API Documentation
 
 The system exposes several key endpoints:
-- `POST /v1/score`: Single applicant credit scoring with SHAP explanations.
-- `POST /v1/score/batch`: Asynchronous batch scoring for multiple applicants.
+- `POST /v1/score`: Single applicant 
 - `GET /v1/health`: System health and model versioning info.
 - `POST /v1/auth/token`: Authentication for lenders.
 
 ## 📈 Roadmap (Development Phases)
 
 - [x] **Phase 0:** Environment Setup & Architecture Design
-- [ ] **Phase 1:** Data Engineering & Exploratory Data Analysis (EDA)
-- [ ] **Phase 2:** Model Development & SHAP Integration
-- [ ] **Phase 3:** Backend API Development & Security
-- [ ] **Phase 4:** Cloud Deployment (AWS)
-- [ ] **Phase 5:** Final Documentation & Thesis Submission
+- [x] **Phase 1:** Data Engineering & Exploratory Data Analysis (EDA)
+- [x] **Phase 2:** Model Development & SHAP Integration
+- [x] **Phase 3:** Backend API Development & Security
+- [x] **Phase 4:** Cloud Deployment (Render)
+- [x] **Phase 5:** Final Documentation & Thesis Submission
 
 ---
 
@@ -120,8 +119,8 @@ The system exposes several key endpoints:
 - **Faculty:** Physical Sciences
 - **Department:** Computer Science
 - **Level:** 400 Level (Final Year)
-- **Developer:** [Your Name]
-- **Supervisor:** [Supervisor's Name]
+- **Developer:** Samuel Oluwadamilare Oluyemi (Formerly Madehin)
+- **Supervisor:** DR. (MRS.) A.R. USIOBAIFO
 
 ---
 
